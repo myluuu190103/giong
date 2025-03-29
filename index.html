@@ -1,0 +1,1140 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextPro AI - Bộ xử lý văn bản thông minh</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --success: #06d6a0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --lightgray: #e9ecef;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f0f2f5;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .version-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-api {
+            border-top-color: var(--primary);
+        }
+
+        .card-prompt {
+            border-top-color: var(--secondary);
+        }
+
+        .card-input {
+            border-top-color: var(--accent);
+        }
+
+        .card-result {
+            border-top-color: var(--success);
+        }
+
+        .card-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .card:hover .card-icon {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+            position: relative;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        input[type="password"],
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--lightgray);
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            color: var(--dark);
+            transition: var(--transition);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+            font-family: inherit;
+        }
+
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0.6rem 1.25rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.25);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d64161;
+            box-shadow: 0 4px 8px rgba(239, 71, 111, 0.25);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn:disabled {
+            background-color: var(--lightgray);
+            color: var(--gray);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .api-key-section {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .api-key-input {
+            flex-grow: 1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge-success {
+            background-color: rgba(6, 214, 160, 0.2);
+            color: #06846a;
+        }
+
+        .status-badge-error {
+            background-color: rgba(239, 71, 111, 0.2);
+            color: #c22f50;
+        }
+
+        .prompt-container {
+            background-color: var(--light);
+            border: 1px solid var(--lightgray);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .prompt-container p {
+            margin-bottom: 1rem;
+        }
+
+        .prompt-container ol {
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .prompt-container li {
+            margin-bottom: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--lightgray);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: transparent;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active:after {
+            background-color: var(--primary);
+        }
+
+        .tab:hover {
+            color: var(--primary-dark);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            background-color: rgba(239, 71, 111, 0.1);
+            color: #c22f50;
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-success {
+            background-color: rgba(6, 214, 160, 0.1);
+            color: #06846a;
+            border-left: 4px solid var(--success);
+        }
+
+        .text-section {
+            position: relative;
+            background-color: white;
+            border: 1px solid var(--lightgray);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .text-section:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .text-section.copied {
+            background-color: rgba(6, 214, 160, 0.05);
+            border-color: var(--success);
+        }
+
+        .copy-number {
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .copy-message {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background-color: var(--success);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .section-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--lightgray);
+            outline: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"]:checked {
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: inset 0 0 0 5px var(--primary);
+        }
+
+        .radio-option label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .copy-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--success);
+            padding: 0.5rem 0;
+        }
+
+        .copy-status i {
+            font-size: 1rem;
+        }
+
+        footer {
+            background-color: var(--light);
+            border-top: 1px solid var(--lightgray);
+            padding: 1.5rem 0;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+
+        .info-box {
+            padding: 1rem;
+            background-color: rgba(76, 201, 240, 0.1);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            margin-bottom: 1.25rem;
+            font-size: 0.95rem;
+        }
+
+        .info-box i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .result-placeholder {
+            padding: 2rem;
+            text-align: center;
+            color: var(--gray);
+            font-style: italic;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 0;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--lightgray);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+            
+            .api-key-section {
+                flex-direction: column;
+            }
+            
+            .actions-row {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>TextPro AI</span>
+                </div>
+                <div class="version-badge">Powered by Gemini API</div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="card card-api">
+                <i class="fas fa-key card-icon"></i>
+                <h2 class="card-title"><i class="fas fa-lock"></i> Cài đặt API</h2>
+                <div class="api-key-section">
+                    <div class="api-key-input input-group">
+                        <label for="apiKey">API Key của Gemini:</label>
+                        <input type="password" id="apiKey" placeholder="Nhập API key của bạn ở đây" />
+                    </div>
+                    <button id="saveApiKey" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Lưu API Key
+                    </button>
+                </div>
+                <div id="apiKeyStatus"></div>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    API key của bạn được lưu trữ cục bộ trong trình duyệt và không được gửi đến bất kỳ máy chủ nào khác ngoài Google API.
+                </div>
+            </div>
+            
+            <div class="card card-prompt">
+                <i class="fas fa-cogs card-icon"></i>
+                <h2 class="card-title"><i class="fas fa-lightbulb"></i> Prompt xử lý văn bản</h2>
+                <div class="prompt-container">
+                    <p>Chỉnh sửa đoạn văn bản dưới đây theo các quy tắc sau:</p>
+                    <ol>
+                        <li>Thay thế tất cả các dấu phẩy (,), dấu chấm (.), dấu chấm hỏi (?), và dấu hai chấm (:) bằng dấu chấm phẩy (;).</li>
+                        <li>Đối với mỗi mục bắt đầu bằng dấu gạch đầu dòng (·), hãy thêm số thứ tự dạng chữ ("Thứ nhất", "Thứ hai", "Thứ ba",...) vào đầu mục, theo sau là dấu chấm phẩy (;).</li>
+                        <li>Thực hiện các điều chỉnh nhỏ về cách diễn đạt (ví dụ: "Tinh thần chiến binh" thành "Tinh thần của một chiến binh"; "Kiên định, vững chãi" thành "Một sự kiên định, vững chãi"; "Khả năng bậc thầy" thành "Giỏi trong việc").</li>
+                        <li>Đảm bảo ý nghĩa cốt lõi và cấu trúc tổng thể của văn bản không bị thay đổi.</li>
+                    </ol>
+                </div>
+                <div class="input-group">
+                    <label for="customPrompt">Tùy chỉnh prompt (tùy chọn):</label>
+                    <textarea id="customPrompt" placeholder="Nếu muốn tùy chỉnh prompt, hãy nhập tại đây"></textarea>
+                </div>
+            </div>
+            
+            <div class="card card-input">
+                <i class="fas fa-file-alt card-icon"></i>
+                <h2 class="card-title"><i class="fas fa-pen"></i> Nhập văn bản</h2>
+                <div class="input-group">
+                    <label for="inputText">Văn bản cần xử lý:</label>
+                    <textarea id="inputText" placeholder="Dán văn bản cần xử lý vào đây..."></textarea>
+                </div>
+                <button id="processButton" class="btn btn-primary" disabled>
+                    <i class="fas fa-sync-alt"></i> Xử lý văn bản
+                </button>
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Đang xử lý văn bản với Gemini AI...</div>
+                </div>
+            </div>
+            
+            <div class="card card-result">
+                <i class="fas fa-check-circle card-icon"></i>
+                <h2 class="card-title"><i class="fas fa-clipboard-check"></i> Kết quả</h2>
+                <div id="resultAlert"></div>
+                
+                <div id="resultContainer">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="processedText" name="textType" value="processed" checked>
+                            <label for="processedText">Văn bản đã xử lý</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="rawText" name="textType" value="raw">
+                            <label for="rawText">Văn bản thô (chưa xử lý)</label>
+                        </div>
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab active" id="viewTab">
+                            <i class="fas fa-eye"></i> Xem văn bản
+                        </button>
+                        <button class="tab" id="splitTab">
+                            <i class="fas fa-cut"></i> Chia văn bản
+                        </button>
+                    </div>
+                    
+                    <div id="viewContent">
+                        <textarea id="resultText" placeholder="Kết quả sẽ hiện ở đây..." readonly></textarea>
+                    </div>
+                    
+                    <div id="splitContent" style="display: none;">
+                        <div class="input-group">
+                            <label for="maxChars">Số ký tự tối đa mỗi phần:</label>
+                            <input type="number" id="maxChars" value="500" min="100" max="2000" />
+                        </div>
+                        
+                        <div class="actions-row">
+                            <button id="splitButton" class="btn btn-primary">
+                                <i class="fas fa-cut"></i> Chia văn bản
+                            </button>
+                            <button id="resetCopyButton" class="btn btn-danger">
+                                <i class="fas fa-redo"></i> Đặt lại trạng thái
+                            </button>
+                        </div>
+                        
+                        <div id="copyStatus" class="copy-status"></div>
+                        <div id="outputContainer" class="output-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 TextPro AI - Công cụ xử lý văn bản thông minh</p>
+        </div>
+    </footer>
+
+    <script>
+        // Biến lưu trữ kết quả xử lý
+        let processedText = '';
+        let rawText = '';
+        
+        // Các selector
+        const apiKeyInput = document.getElementById('apiKey');
+        const saveApiKeyButton = document.getElementById('saveApiKey');
+        const apiKeyStatus = document.getElementById('apiKeyStatus');
+        const customPromptInput = document.getElementById('customPrompt');
+        const inputTextArea = document.getElementById('inputText');
+        const processButton = document.getElementById('processButton');
+        const loadingElement = document.getElementById('loading');
+        const resultText = document.getElementById('resultText');
+        const resultAlert = document.getElementById('resultAlert');
+        const viewTab = document.getElementById('viewTab');
+        const splitTab = document.getElementById('splitTab');
+        const viewContent = document.getElementById('viewContent');
+        const splitContent = document.getElementById('splitContent');
+        const maxCharsInput = document.getElementById('maxChars');
+        const splitButton = document.getElementById('splitButton');
+        const outputContainer = document.getElementById('outputContainer');
+        const textTypeRadios = document.getElementsByName('textType');
+        const resetCopyButton = document.getElementById('resetCopyButton');
+        const copyStatus = document.getElementById('copyStatus');
+        
+        // Biến đếm số lần sao chép
+        let copyCounter = 0;
+        let copiedSections = [];
+        
+        // Kiểm tra API key trong localStorage khi trang được tải
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedApiKey = localStorage.getItem('gm_api_secure_token') || localStorage.getItem('gemini_api_key');
+            
+            if (savedApiKey) {
+                // Hiển thị dạng ẩn thay vì API key thật
+                apiKeyInput.value = "••••••••••••••••••••••••••";
+                showAlert(apiKeyStatus, '<i class="fas fa-check-circle"></i> API Key đã được lưu an toàn.', 'success');
+                processButton.disabled = false;
+                
+                // Xóa key cũ nếu còn tồn tại
+                if (localStorage.getItem('gemini_api_key')) {
+                    localStorage.removeItem('gemini_api_key');
+                    localStorage.setItem('gm_api_secure_token', savedApiKey);
+                }
+                
+                // Thay thế hàm console.log để tránh hiển thị API key
+                console.log = (function(oriLogFunc) {
+                    return function(text) {
+                        if (typeof text === 'string' && text.includes(savedApiKey)) {
+                            text = text.replace(savedApiKey, "***API_KEY_HIDDEN***");
+                        }
+                        oriLogFunc.apply(console, arguments);
+                    };
+                })(console.log);
+            } else {
+                // Hiển thị placeholder trống trong outputContainer
+                outputContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Chưa có nội dung để hiển thị</p>
+                    </div>
+                `;
+            }
+        });
+        
+        // Sự kiện lưu API key với bảo mật tốt hơn
+        saveApiKeyButton.addEventListener('click', () => {
+            const apiKey = apiKeyInput.value.trim();
+            if (apiKey) {
+                try {
+                    // Lưu API key vào localStorage với tên không dễ đoán
+                    localStorage.setItem('gm_api_secure_token', apiKey);
+                    // Xóa giá trị hiển thị trong console.log
+                    console.log = (function(oriLogFunc) {
+                        return function(text) {
+                            if (typeof text === 'string' && text.includes(apiKey)) {
+                                text = text.replace(apiKey, "***API_KEY_HIDDEN***");
+                            }
+                            oriLogFunc.apply(console, arguments);
+                        };
+                    })(console.log);
+                    
+                    showAlert(apiKeyStatus, '<i class="fas fa-check-circle"></i> API Key đã được lưu an toàn!', 'success');
+                    processButton.disabled = false;
+                    
+                    // Xóa API key khỏi trường nhập sau khi lưu
+                    setTimeout(() => {
+                        apiKeyInput.value = "••••••••••••••••••••••••••";
+                    }, 1000);
+                } catch (e) {
+                    showAlert(apiKeyStatus, '<i class="fas fa-exclamation-triangle"></i> Lỗi khi lưu API Key: ' + e.message, 'error');
+                }
+            } else {
+                showAlert(apiKeyStatus, '<i class="fas fa-exclamation-triangle"></i> Vui lòng nhập API Key.', 'error');
+                processButton.disabled = true;
+            }
+        });
+        
+        // Xử lý văn bản khi nhấn nút Process
+        processButton.addEventListener('click', async () => {
+            // Lấy API key đã lưu từ localStorage thay vì từ trường nhập
+            const apiKey = localStorage.getItem('gm_api_secure_token') || apiKeyInput.value.trim();
+            const inputText = inputTextArea.value.trim();
+            
+            if (!apiKey) {
+                showAlert(resultAlert, '<i class="fas fa-exclamation-triangle"></i> Vui lòng nhập API Key.', 'error');
+                return;
+            }
+            
+            if (!inputText) {
+                showAlert(resultAlert, '<i class="fas fa-exclamation-triangle"></i> Vui lòng nhập văn bản để xử lý.', 'error');
+                return;
+            }
+            
+            // Hiển thị trạng thái đang xử lý
+            loadingElement.style.display = 'block';
+            resultAlert.innerHTML = '';
+            
+            try {
+                // Lưu văn bản thô
+                rawText = inputText;
+                
+                // Gọi API Gemini
+                const response = await processWithGemini(apiKey, inputText);
+                processedText = response;
+                
+                // Hiển thị kết quả
+                updateResultDisplay();
+                
+                // Ẩn trạng thái đang xử lý
+                loadingElement.style.display = 'none';
+                showAlert(resultAlert, '<i class="fas fa-check-circle"></i> Xử lý văn bản thành công!', 'success');
+            } catch (error) {
+                loadingElement.style.display = 'none';
+                showAlert(resultAlert, '<i class="fas fa-exclamation-triangle"></i> Lỗi: ' + error.message, 'error');
+            }
+        });
+        
+        // Xử lý chuyển tab
+        viewTab.addEventListener('click', () => {
+            viewTab.classList.add('active');
+            splitTab.classList.remove('active');
+            viewContent.style.display = 'block';
+            splitContent.style.display = 'none';
+        });
+        
+        splitTab.addEventListener('click', () => {
+            splitTab.classList.add('active');
+            viewTab.classList.remove('active');
+            splitContent.style.display = 'block';
+            viewContent.style.display = 'none';
+        });
+        
+        // Sự kiện chọn loại văn bản (đã xử lý hoặc thô)
+        textTypeRadios.forEach(radio => {
+            radio.addEventListener('change', updateResultDisplay);
+        });
+        
+        // Sự kiện chia văn bản
+        splitButton.addEventListener('click', () => {
+            const selectedTextType = document.querySelector('input[name="textType"]:checked').value;
+            const textToSplit = selectedTextType === 'processed' ? processedText : rawText;
+            const maxChars = parseInt(maxCharsInput.value, 10) || 500;
+            
+            if (!textToSplit) {
+                showAlert(resultAlert, '<i class="fas fa-exclamation-triangle"></i> Không có văn bản để chia.', 'error');
+                return;
+            }
+            
+            splitText(textToSplit, maxChars);
+        });
+        
+        // Sự kiện reset trạng thái sao chép
+        resetCopyButton.addEventListener('click', () => {
+            copyCounter = 0;
+            copiedSections = [];
+            
+            // Xóa trạng thái và số sao chép của tất cả các phần
+            const sections = document.querySelectorAll('.text-section');
+            sections.forEach(section => {
+                section.classList.remove('copied');
+                const copyNumber = section.querySelector('.copy-number');
+                if (copyNumber) {
+                    copyNumber.remove();
+                }
+            });
+            
+            updateCopyStatus();
+        });
+        
+        // Hàm gọi API Gemini
+        async function processWithGemini(apiKey, inputText) {
+            const prompt = customPromptInput.value.trim() || document.querySelector('.prompt-container').textContent;
+            
+            const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+            
+            // Không hiển thị API key trong console log
+            console.log("Đang xử lý văn bản với Gemini API...");
+            
+            const requestData = {
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: `${prompt}\n\nVăn bản cần xử lý:\n${inputText}`
+                            }
+                        ]
+                    }
+                ],
+                generationConfig: {
+                    temperature: 0.2,
+                    maxOutputTokens: 8192
+                }
+            };
+            
+            // Tạo URL với API key nhưng không lưu URL này vào biến
+            const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`API Error: ${errorData.error?.message || 'Unknown error'}`);
+            }
+            
+            const responseData = await response.json();
+            
+            // Lấy kết quả từ phản hồi
+            if (responseData.candidates && responseData.candidates.length > 0 && 
+                responseData.candidates[0].content && responseData.candidates[0].content.parts) {
+                return responseData.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error('Không nhận được kết quả hợp lệ từ API');
+            }
+        }
+        
+        // Cập nhật hiển thị kết quả dựa trên lựa chọn loại văn bản
+        function updateResultDisplay() {
+            const selectedTextType = document.querySelector('input[name="textType"]:checked').value;
+            resultText.value = selectedTextType === 'processed' ? processedText : rawText;
+        }
+        
+        // Cập nhật trạng thái sao chép
+        function updateCopyStatus() {
+            if (copiedSections.length === 0) {
+                copyStatus.innerHTML = '';
+                return;
+            }
+            
+            const total = document.querySelectorAll('.text-section').length;
+            copyStatus.innerHTML = `<i class="fas fa-clipboard-check"></i> Đã sao chép ${copiedSections.length}/${total} phần`;
+        }
+        
+        // Hiển thị thông báo
+        function showAlert(element, message, type) {
+            element.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+        }
+        
+        // Hàm chia văn bản thành các phần nhỏ
+        function splitText(text, maxChars) {
+            outputContainer.innerHTML = '';
+            copyCounter = 0;
+            copiedSections = [];
+            copyStatus.innerHTML = '';
+            
+            if (!text.trim()) {
+                outputContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Không có văn bản để chia</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Chia văn bản thành các đoạn nhỏ hơn maxChars ký tự
+            let sections = [];
+            let currentSection = '';
+            
+            // Chia văn bản theo các câu hoặc dấu xuống dòng
+            const sentences = text.replace(/([.!?;])\s+/g, "$1\n").split(/\n+/);
+            
+            for (let sentence of sentences) {
+                // Nếu một câu dài hơn maxChars, cần chia nhỏ hơn
+                if (sentence.length > maxChars) {
+                    // Chia câu thành các phần nhỏ hơn theo từng từ
+                    const words = sentence.split(' ');
+                    let tempSection = '';
+                    
+                    for (let word of words) {
+                        if ((tempSection + ' ' + word).length <= maxChars) {
+                            tempSection += (tempSection ? ' ' : '') + word;
+                        } else {
+                            if (currentSection && (currentSection.length + tempSection.length + 1 <= maxChars)) {
+                                currentSection += (currentSection ? ' ' : '') + tempSection;
+                            } else {
+                                if (currentSection) sections.push(currentSection);
+                                currentSection = tempSection;
+                            }
+                            tempSection = word;
+                        }
+                    }
+                    
+                    if (tempSection) {
+                        if (currentSection && (currentSection.length + tempSection.length + 1 <= maxChars)) {
+                            currentSection += (currentSection ? ' ' : '') + tempSection;
+                        } else {
+                            if (currentSection) sections.push(currentSection);
+                            currentSection = tempSection;
+                        }
+                    }
+                } else {
+                    // Kiểm tra xem có thể thêm câu này vào section hiện tại không
+                    if (currentSection && (currentSection.length + sentence.length + 1 <= maxChars)) {
+                        currentSection += (currentSection ? ' ' : '') + sentence;
+                    } else {
+                        if (currentSection) sections.push(currentSection);
+                        currentSection = sentence;
+                    }
+                }
+            }
+            
+            // Thêm phần cuối cùng nếu còn
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+            
+            // Hiển thị các phần đã chia
+            sections.forEach((section, index) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'text-section';
+                sectionDiv.setAttribute('data-index', index);
+                sectionDiv.onclick = function() {
+                    copyToClipboard(section, this);
+                };
+                
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'section-header';
+                headerDiv.innerHTML = `<span>Đoạn ${index + 1}</span><span>${section.length} ký tự</span>`;
+                
+                const textDiv = document.createElement('div');
+                textDiv.className = 'section-text';
+                textDiv.textContent = section;
+                
+                const copyMsg = document.createElement('div');
+                copyMsg.className = 'copy-message';
+                copyMsg.textContent = 'Đã sao chép!';
+                
+                sectionDiv.appendChild(headerDiv);
+                sectionDiv.appendChild(textDiv);
+                sectionDiv.appendChild(copyMsg);
+                
+                outputContainer.appendChild(sectionDiv);
+            });
+            
+            updateCopyStatus();
+        }
+        
+        // Hàm sao chép văn bản vào clipboard
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Tăng biến đếm và thêm vào danh sách đã sao chép
+                copyCounter++;
+                const sectionIndex = parseInt(element.getAttribute('data-index'));
+                if (!copiedSections.includes(sectionIndex)) {
+                    copiedSections.push(sectionIndex);
+                }
+                
+                // Đánh dấu phần đã sao chép
+                element.classList.add('copied');
+                
+                // Kiểm tra xem đã có số sao chép chưa
+                let copyNumber = element.querySelector('.copy-number');
+                if (!copyNumber) {
+                    copyNumber = document.createElement('div');
+                    copyNumber.className = 'copy-number';
+                    element.appendChild(copyNumber);
+                }
+                
+                // Cập nhật số sao chép
+                copyNumber.textContent = copyCounter;
+                
+                // Hiển thị thông báo đã sao chép
+                const copyMsg = element.querySelector('.copy-message');
+                copyMsg.style.display = 'block';
+                
+                // Cập nhật trạng thái sao chép
+                updateCopyStatus();
+                
+                // Ẩn thông báo sau 2 giây
+                setTimeout(() => {
+                    copyMsg.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Không thể sao chép: ', err);
+                alert('Không thể sao chép văn bản. Vui lòng thử lại.');
+            });
+        }
+    </script>
+</body>
+</html>
